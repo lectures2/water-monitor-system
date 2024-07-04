@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Design</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .erd-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .erd-table {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            width: 380px;
+            background: #fff;
+        }
+
+        .erd-table-header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .erd-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .erd-row:last-child {
+            border-bottom: none;
+        }
+
+        .erd-column {
+            flex: 1;
+        }
+
+        .erd-column:first-child {
+            font-weight: bold;
+            flex: 0 0 120px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Database Design</h1>
+        
+        <div class="erd-container">
+            <!-- User Table -->
+            <div class="erd-table">
+                <div class="erd-table-header">User</div>
+                <div class="erd-row"><div class="erd-column">user_id</div><div class="erd-column">INTEGER PRIMARY KEY AUTOINCREMENT</div></div>
+                <div class="erd-row"><div class="erd-column">first_name</div><div class="erd-column">VARCHAR(255)</div></div>
+                <div class="erd-row"><div class="erd-column">last_name</div><div class="erd-column">VARCHAR(255)</div></div>
+                <div class="erd-row"><div class="erd-column">email</div><div class="erd-column">VARCHAR(255)</div></div>
+                <div class="erd-row"><div class="erd-column">mobile_number</div><div class="erd-column">VARCHAR(255)</div></div>
+                <div class="erd-row"><div class="erd-column">password</div><div class="erd-column">VARCHAR(255)</div></div>
+            </div>
+
+            <!-- Admin Table -->
+            <div class="erd-table">
+                <div class="erd-table-header">Admin</div>
+                <div class="erd-row"><div class="erd-column">admin_id</div><div class="erd-column">INTEGER PRIMARY KEY AUTOINCREMENT</div></div>
+                <div class="erd-row"><div class="erd-column">password</div><div class="erd-column">TEXT</div></div>
+            </div>
+
+            <!-- Water Monitoring System Table -->
+            <div class="erd-table">
+                <div class="erd-table-header">Water Monitoring System</div>
+                <div class="erd-row"><div class="erd-column">water_id</div><div class="erd-column">INTEGER PRIMARY KEY AUTOINCREMENT</div></div>
+                <div class="erd-row"><div class="erd-column">water_data</div><div class="erd-column">VARCHAR(255)</div></div>
+                <div class="erd-row"><div class="erd-column">water_ph</div><div class="erd-column">VARCHAR(255)</div></div>
+                <div class="erd-row"><div class="erd-column">water_salinity</div><div class="erd-column">VARCHAR(255)</div></div>
+                <div class="erd-row"><div class="erd-column">sar_water_temp</div><div class="erd-column">VARCHAR(255)</div></div>
+            </div>
+
+            <!-- Water Source Table -->
+            <div class="erd-table">
+                <div class="erd-table-header">Water Source</div>
+                <div class="erd-row"><div class="erd-column">source_id</div><div class="erd-column">INTEGER PRIMARY KEY AUTOINCREMENT</div></div>
+                <div class="erd-row"><div class="erd-column">name</div><div class="erd-column">TEXT</div></div>
+                <div class="erd-row"><div class="erd-column">location</div><div class="erd-column">TEXT</div></div>
+                <div class="erd-row"><div class="erd-column">water_type</div><div class="erd-column">TEXT</div></div>
+            </div>
+
+            <!-- Measurement Table -->
+            <div class="erd-table">
+                <div class="erd-table-header">Measurement</div>
+                <div class="erd-row"><div class="erd-column">measurement_id</div><div class="erd-column">INTEGER PRIMARY KEY AUTOINCREMENT</div></div>
+                <div class="erd-row"><div class="erd-column">sensor_id</div><div class="erd-column">INTEGER</div></div>
+                <div class="erd-row"><div class="erd-column">timestamp</div><div class="erd-column">TEXT</div></div>
+                <div class="erd-row"><div class="erd-column">temperature</div><div class="erd-column">REAL</div></div>
+                <div class="erd-row"><div class="erd-column">pH</div><div class="erd-column">REAL</div></div>
+                <div class="erd-row"><div class="erd-column">turbidity</div><div class="erd-column">REAL</div></div>
+                <div class="erd-row"><div class="erd-column">conductivity</div><div class="erd-column">REAL</div></div>
+            </div>
+
+            <!-- Alert Table -->
+            <div class="erd-table">
+                <div class="erd-table-header">Alert</div>
+                <div class="erd-row"><div class="erd-column">alert_id</div><div class="erd-column">INTEGER PRIMARY KEY AUTOINCREMENT</div></div>
+                <div class="erd-row"><div class="erd-column">measurement_id</div><div class="erd-column">INTEGER, FOREIGN KEY REFERENCES Measurement(measurement_id)</div></div>
+                <div class="erd-row"><div class="erd-column">alert_type</div><div class="erd-column">TEXT</div></div>
+                <div class="erd-row"><div class="erd-column">description</div><div class="erd-column">TEXT</div></div>
+                <div class="erd-row"><div class="erd-column">timestamp</div><div class="erd-column">TEXT</div></div>
+                <div class="erd-row"><div class="erd-column">acknowledged</div><div class="erd-column">INTEGER</div></div>
+            </div>
+
+            <!-- Arduino Table -->
+            <div class="erd-table">
+                <div class="erd-table-header">Arduino</div>
+                <div class="erd-row"><div class="erd-column">arduino_id</div><div class="erd-column">INTEGER PRIMARY KEY AUTOINCREMENT</div></div>
+                <div class="erd-row"><div class="erd-column">arduino_name</div><div class="erd-column">TEXT</div></div>
+                <div class="erd-row"><div class="erd-column">location_id</div><div class="erd-column">INTEGER, FOREIGN KEY REFERENCES Water Source(source_id)</div></div>
+            </div>
+
+            <!-- Sensors Table -->
+            <div class="erd-table">
+                <div class="erd-table-header">Sensors</div>
+                <div class="erd-row"><div class="erd-column">sensor_id</div><div class="erd-column">INTEGER PRIMARY KEY AUTOINCREMENT</div></div>
+                <div class="erd-row"><div class="erd-column">sensor_name</div><div class="erd-column">TEXT</div></div>
+                <div class="erd-row"><div class="erd-column">location_id</div><div class="erd-column">INTEGER, FOREIGN KEY REFERENCES Water Source(source_id)</div></div>
+                <div class="erd-row"><div class="erd-column">sensor_type</div><div class="erd-column">TEXT</div></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

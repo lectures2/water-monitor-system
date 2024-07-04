@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Monitoring System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome for icons -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fdebd0;
+            /* Light yellow background color */
+            margin: 0;
+            padding: 0;
+            position: relative;
+            /* Added position relative */
+        }
+
+        .navbar {
+            background-color: #fda30e;
+            /* Yellow color for navigation bar */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            color: #fff;
+            font-size: 24px;
+            text-transform: uppercase;
+        }
+
+        .navbar-toggler-icon {
+            color: #fff;
+        }
+
+        .navbar-nav .nav-link {
+            color: #fff;
+            font-size: 16px;
+            margin-right: 20px;
+        }
+
+        .notifications {
+            color: #fff;
+            font-size: 24px;
+            margin-left: auto;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notifications-panel {
+            position: absolute;
+            top: 60px;
+            right: 10%;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            padding: 10px;
+            width: 200px;
+        }
+
+        .notifications-panel ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .notifications-panel li {
+            padding: 10px 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .notifications-panel li:last-child {
+            border-bottom: none;
+        }
+
+        .notifications-panel li a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .notifications-panel li a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            background-color: #fff;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background-color: #fda30e;
+            /* Yellow color for card headers */
+            border-radius: 10px 10px 0 0;
+            font-weight: bold;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+        }
+
+        .card-header:before {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 50px;
+            height: 3px;
+            background-color: #fff;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .card-body {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-body h2 {
+            color: #007bff;
+            /* Blue color for card body text */
+            font-size: 36px;
+            margin-bottom: 0;
+        }
+
+        .logout-btn {
+            background-color: #fda30e;
+            /* Yellow color for the button */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 18px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-btn:hover {
+            background-color: #e68a00;
+            /* Darker yellow color on hover */
+        }
+
+        .username {
+            color: #007bff;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #888;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #888;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #555;
+        }
+
+        /* Added styles for options menu */
+        .options-menu {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .options-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .options-menu li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .options-menu li:last-child {
+            border-bottom: none;
+        }
+
+        .options-menu li a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .options-menu li a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="fas fa-tint"></i> Water Monitoring System</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#"><i class="fas fa-home"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html"><i class="fas fa-user"></i> Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                    </li>
+                </ul>
+                <a class="notifications" href="noti.html">
+                    <i class="fas fa-bell"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2 class="username">Welcome!</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Temperature</h2>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="temperatureChart"></canvas>
+                        <h2 id="temperatureValue">--</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>pH</h2>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="phChart"></canvas>
+                        <h2 id="phValue">--</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Salinity</h2>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="salinityChart"></canvas>
+                        <h2 id="salinityValue">--</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- Options Menu -->
+    <div class="options-menu" onclick="toggleOptionsMenu()">
+        <i class="fas fa-ellipsis-v"></i>
+        <ul id="optionsMenu" style="display: none;">
+            <li><a href="#" onclick="downloadReport()"><i class="fas fa-database"></i> View Data Collected</a></li>
+            <li><a href="accupdate.html"><i class="fas fa-address-card"></i> Account Details</a></li>
+        </ul>
+    </div>
+
+    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Chart.js initialization
+        let temperatureChart, phChart, salinityChart;
+        let temperatureData = [];
+        let phData = [];
+        let salinityData = [];
+
+        // Initialize Charts
+        function initializeCharts() {
+            const ctxTemperature = document.getElementById('temperatureChart').getContext('2d');
+            temperatureChart = new Chart(ctxTemperature, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Temperature (°C)',
+                        data: temperatureData,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Time'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Temperature (°C)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            const ctxPh = document.getElementById('phChart').getContext('2d');
+            phChart = new Chart(ctxPh, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'pH',
+                        data: phData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Time'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'pH'
+                            }
+                        }
+                    }
+                }
+            });
+
+            const ctxSalinity = document.getElementById('salinityChart').getContext('2d');
+            salinityChart = new Chart(ctxSalinity, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Salinity (ppt)',
+                        data: salinityData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Time'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Salinity (ppt)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update Charts and Values
+        function updateCharts() {
+            const timeNow = new Date().toLocaleTimeString();
+
+            const randomTemperature = (Math.random() * 10 + 20).toFixed(2);
+            const randomPh = (Math.random() * 4 + 5).toFixed(2);
+            const randomSalinity = (Math.random() * 30).toFixed(2);
+
+            if (temperatureData.length >= 10) {
+                temperatureData.shift();
+                phData.shift();
+                salinityData.shift();
+            }
+
+            temperatureData.push(randomTemperature);
+            phData.push(randomPh);
+            salinityData.push(randomSalinity);
+
+            temperatureChart.data.labels.push(timeNow);
+            phChart.data.labels.push(timeNow);
+            salinityChart.data.labels.push(timeNow);
+
+            document.getElementById('temperatureValue').innerText = randomTemperature + ' °C';
+            document.getElementById('phValue').innerText = randomPh;
+            document.getElementById('salinityValue').innerText = randomSalinity + ' ppt';
+
+            temperatureChart.update();
+            phChart.update();
+            salinityChart.update();
+        }
+
+        function randomizeOutput() {
+            setInterval(updateCharts, 15000); // Update values every 2 seconds
+        }
+
+        function toggleOptionsMenu() {
+            const menu = document.getElementById('optionsMenu');
+            if (menu.style.display === 'none' || menu.style.display === '') {
+                menu.style.display = 'block';
+            } else {
+                menu.style.display = 'none';
+            }
+        }
+
+        function downloadReport() {
+            const data = {
+                temperature: temperatureData,
+                ph: phData,
+                salinity: salinityData
+            };
+            const json = JSON.stringify(data);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'data_report.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function logout() {
+             // Redirect to login page
+        window.location.href = 'login.html';
+        }
+
+        $(document).ready(function () {
+            initializeCharts();
+            randomizeOutput();
+        });
+    </script>
+</body>
+
+</html>
